@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitTrack — фитнес-трекер</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1 class="logo">FitTrack</h1>
+
+    <!-- Профиль всегда слева, сразу после логотипа -->
+    <div class="profile-switcher">
+      <label class="sr-only" for="profile-select">Активный профиль</label>
+      <select id="profile-select" aria-label="Активный профиль"></select>
+      <button type="button" class="btn-primary" id="profile-new-btn">+ Новый</button>
+      <button type="button" class="btn-del" id="profile-del-btn" title="Удалить профиль" aria-label="Удалить профиль">✕</button>
+    </div>
+
+    <!-- Бургер для мобильных (прижимается вправо) -->
+    <button class="burger" id="burger-btn" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Меню навигации (на ПК уезжает вправо через margin-left: auto в CSS) -->
+    <div class="header-menu" id="mobile-menu">
+      <nav class="main-nav" aria-label="Основная навигация">
+        <button type="button" class="nav-btn active" data-tab="dashboard">Дашборд</button>
+        <button type="button" class="nav-btn" data-tab="profile">Профиль</button>
+        <button type="button" class="nav-btn" data-tab="workouts">Тренировки</button>
+        <button type="button" class="nav-btn" data-tab="nutrition">Питание</button>
+        <button type="button" class="nav-btn" data-tab="stats">Статистика</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <!-- ДАШБОРД -->
+    <section class="tab-panel active" id="tab-dashboard" aria-labelledby="dash-title">
+      <h2 id="dash-title">Обзор</h2>
+      <div class="cards">
+        <article class="card"><h3>Норма калорий</h3><p class="big" id="dash-tdee">—</p><small>ккал/день</small></article>
+        <article class="card"><h3>Сожжено сегодня</h3><p class="big" id="dash-burned">0</p><small>ккал</small></article>
+        <article class="card"><h3>Съедено сегодня</h3><p class="big" id="dash-eaten">0</p><small>ккал</small></article>
+        <article class="card"><h3>Баланс дня</h3><p class="big" id="dash-balance">0</p><small>ккал</small></article>
+      </div>
+      <div class="chart-box">
+        <h3>Динамика веса</h3>
+        <canvas id="chart-weight" height="220"></canvas>
+      </div>
+    </section>
+
+    <!-- ПРОФИЛЬ -->
+    <section class="tab-panel" id="tab-profile" aria-labelledby="profile-title">
+      <h2 id="profile-title">Профиль пользователя</h2>
+      <form id="profile-form" class="form" novalidate>
+        <label>Имя профиля
+          <input type="text" name="name" maxlength="40" required placeholder="Напр. Алексей" />
+        </label>
+        <div class="form-row">
+          <label>Пол
+            <select name="sex" required>
+              <option value="male">Мужской</option>
+              <option value="female">Женский</option>
+            </select>
+          </label>
+          <label>Возраст (лет)
+            <input type="number" name="age" min="10" max="100" required />
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Рост (см)
+            <input type="number" name="height" min="100" max="250" required />
+          </label>
+          <label>Вес (кг)
+            <input type="number" name="weight" min="30" max="300" step="0.1" required />
+          </label>
+        </div>
+        <label>Уровень активности
+          <select name="activity">
+            <option value="1.2">Минимальный (сидячий)</option>
+            <option value="1.375">Небольшой (1–3 трен./нед)</option>
+            <option value="1.55">Средний (3–5 трен./нед)</option>
+            <option value="1.725">Высокий (6–7 трен./нед)</option>
+            <option value="1.9">Очень высокий</option>
+          </select>
+        </label>
+        <label>Цель
+          <select name="goal">
+            <option value="lose">Похудение (−15%)</option>
+            <option value="maintain">Поддержание</option>
+            <option value="gain">Набор (+15%)</option>
+          </select>
+        </label>
+        <button type="submit" class="btn-primary">Сохранить профиль</button>
+        <p class="form-msg" id="profile-msg" role="status"></p>
+      </form>
+
+      <div class="cards" id="profile-result">
+        <article class="card"><h3>BMR</h3><p class="big" id="pr-bmr">—</p><small>базовый обмен</small></article>
+        <article class="card"><h3>TDEE</h3><p class="big" id="pr-tdee">—</p><small>с учётом активности</small></article>
+        <article class="card"><h3>Цель</h3><p class="big" id="pr-goal">—</p><small>ккал/день</small></article>
+      </div>
+
+      <div class="form">
+        <h3>Записать текущий вес</h3>
+        <div class="form-row">
+          <label>Вес (кг)
+            <input type="number" id="weight-log-input" min="30" max="300" step="0.1" />
+          </label>
+          <label>Дата
+            <input type="date" id="weight-log-date" />
+          </label>
+        </div>
+        <button type="button" class="btn-secondary" id="weight-log-btn">Добавить запись</button>
+        <p class="form-msg" id="weight-msg" role="status"></p>
+      </div>
+    </section>
+
+    <!-- ТРЕНИРОВКИ -->
+    <section class="tab-panel" id="tab-workouts" aria-labelledby="workouts-title">
+      <h2 id="workouts-title">Тренировки</h2>
+      <form id="workout-form" class="form" novalidate>
+        <div class="form-row">
+          <label>Тип тренировки
+            <select name="type" required>
+              <option value="run">Бег (MET 9.8)</option>
+              <option value="walk">Ходьба (MET 3.5)</option>
+              <option value="cycle">Велосипед (MET 7.5)</option>
+              <option value="strength">Силовая (MET 6.0)</option>
+              <option value="swim">Плавание (MET 8.0)</option>
+              <option value="yoga">Йога (MET 2.5)</option>
+            </select>
+          </label>
+          <label>Дата
+            <input type="date" name="date" required />
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Длительность (мин)
+            <input type="number" name="duration" min="1" max="600" required />
+          </label>
+          <label>Интенсивность
+            <select name="intensity">
+              <option value="0.8">Низкая (×0.8)</option>
+              <option value="1" selected>Средняя (×1.0)</option>
+              <option value="1.2">Высокая (×1.2)</option>
+            </select>
+          </label>
+        </div>
+        <button type="submit" class="btn-primary">Добавить тренировку</button>
+        <p class="form-msg" id="workout-msg" role="status"></p>
+      </form>
+      <h3>История тренировок</h3>
+      <ul class="list" id="workout-list"></ul>
+    </section>
+
+    <!-- ПИТАНИЕ -->
+    <section class="tab-panel" id="tab-nutrition" aria-labelledby="nutrition-title">
+      <h2 id="nutrition-title">Питание</h2>
+      <form id="food-form" class="form" novalidate>
+        <div class="form-row">
+          <label>Блюдо
+            <select name="foodId" id="food-select" required></select>
+          </label>
+          <label>Порция (г)
+            <input type="number" name="grams" min="1" max="2000" value="100" required />
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Дата
+            <input type="date" name="date" required />
+          </label>
+          <label>Или ккал вручную
+            <input type="number" name="manualKcal" min="0" max="5000" placeholder="напр. 250" />
+          </label>
+        </div>
+        <button type="submit" class="btn-primary">Добавить</button>
+        <p class="form-msg" id="food-msg" role="status"></p>
+      </form>
+      <h3>Съедено за день</h3>
+      <p class="day-total">Итого за выбранную дату: <strong id="food-day-total">0</strong> ккал</p>
+      <ul class="list" id="food-list"></ul>
+    </section>
+
+    <!-- СТАТИСТИКА -->
+    <section class="tab-panel" id="tab-stats" aria-labelledby="stats-title">
+      <h2 id="stats-title">Статистика</h2>
+      <div class="form-row">
+        <label>Период
+          <select id="stats-period">
+            <option value="7">7 дней</option>
+            <option value="30" selected>30 дней</option>
+            <option value="90">90 дней</option>
+          </select>
+        </label>
+      </div>
+      <div class="cards">
+        <article class="card"><h3>Тренировок</h3><p class="big" id="st-count">0</p></article>
+        <article class="card"><h3>Сожжено</h3><p class="big" id="st-burned">0</p><small>ккал</small></article>
+        <article class="card"><h3>Съедено</h3><p class="big" id="st-eaten">0</p><small>ккал</small></article>
+        <article class="card"><h3>Баланс</h3><p class="big" id="st-balance">0</p><small>ккал</small></article>
+      </div>
+      <div class="chart-box"><h3>Калории тренировок по дням</h3><canvas id="chart-burned" height="220"></canvas></div>
+      <div class="chart-box"><h3>Калории питания по дням</h3><canvas id="chart-eaten" height="220"></canvas></div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>FitTrack — учебный проект. Данные хранятся локально в браузере.</p>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

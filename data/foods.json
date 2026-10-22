@@ -1,0 +1,17 @@
+[
+  { "id": "oatmeal", "name": "Овсянка (варёная)", "kcalPer100": 88 },
+  { "id": "buckwheat", "name": "Гречка (варёная)", "kcalPer100": 110 },
+  { "id": "rice", "name": "Рис (варёный)", "kcalPer100": 130 },
+  { "id": "chicken", "name": "Куриная грудка (варёная)", "kcalPer100": 165 },
+  { "id": "beef", "name": "Говядина (тушёная)", "kcalPer100": 250 },
+  { "id": "egg", "name": "Яйцо куриное", "kcalPer100": 155 },
+  { "id": "bread", "name": "Хлеб пшеничный", "kcalPer100": 260 },
+  { "id": "apple", "name": "Яблоко", "kcalPer100": 52 },
+  { "id": "banana", "name": "Банан", "kcalPer100": 89 },
+  { "id": "yogurt", "name": "Йогурт натуральный", "kcalPer100": 60 },
+  { "id": "cheese", "name": "Сыр твёрдый", "kcalPer100": 350 },
+  { "id": "salad", "name": "Овощной салат", "kcalPer100": 45 },
+  { "id": "soup", "name": "Суп овощной", "kcalPer100": 40 },
+  { "id": "pasta", "name": "Макароны (варёные)", "kcalPer100": 158 },
+  { "id": "fish", "name": "Рыба (запечённая)", "kcalPer100": 180 }
+]
