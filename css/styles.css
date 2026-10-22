@@ -13,11 +13,11 @@
   --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
-/* ЖЕНСКАЯ ТЕМА (включается через JS классом на body) */
+/* ЖЕНСКАЯ ТЕМА */
 body.theme-female {
   --primary: #ec4899;       /* Розовый */
   --primary-dark: #be185d;  /* Темно-розовый */
-  --accent: #f472b6;        /* Светло-розовый для кнопок (Добавить тренировку/вес) */
+  --accent: #f472b6;        /* Светло-розовый для кнопок */
 }
 
 * { box-sizing: border-box; }
@@ -31,7 +31,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  transition: background 0.3s ease; /* Плавный переход фона при смене темы */
+  transition: background 0.3s ease;
 }
 
 /* HEADER */
@@ -72,7 +72,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-left: auto;
+  margin-left: auto; /* ПРИЖИМАЕТ НАВИГАЦИЮ ВПРАВО НА ПК */
 }
 
 /* NAV */
@@ -313,25 +313,40 @@ canvas { width: 100%; display: block; }
     margin-left: auto;
   }
 
+  /* Группа профиля занимает оставшееся место и выстраивается в строку */
   .profile-switcher {
+    display: flex;
+    align-items: center;
     flex: 1;
     min-width: 0;
+    gap: 6px; /* Уменьшили расстояние между элементами */
   }
+
+  /* Селектор занимает всё свободное пространство */
   .profile-switcher select {
+    flex: 1;
     width: 100%;
     min-width: 0;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    padding: 8px 6px; /* Уменьшили внутренние отступы */
   }
-  .profile-switcher .btn-secondary {
-    padding: 8px 10px;
+
+  /* Кнопка +Новый сжимается по содержимому */
+  .profile-switcher #profile-new-btn {
+    flex-shrink: 0; /* Запрещаем кнопке сплющиваться */
+    padding: 8px 12px;
     font-size: 0.85rem;
     white-space: nowrap;
   }
+
+  /* Кнопка удаления (крестик) */
   .profile-switcher .btn-del {
+    flex-shrink: 0;
     padding: 8px 10px;
     font-size: 0.85rem;
   }
 
+  /* Меню навигации выпадает по бургеру */
   .header-menu {
     position: absolute;
     top: 100%;
